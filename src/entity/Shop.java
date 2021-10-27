@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @author pupil
  */
 public class Shop implements Serializable{
-    int money;
+    private int money;
     
     public Shop(){
     }

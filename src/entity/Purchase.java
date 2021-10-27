@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class Purchase implements Serializable{
     Shoes shoes;
     Buyer buyer;
-    boolean canceled;
+    private boolean canceled;
     
     public Purchase(){
         

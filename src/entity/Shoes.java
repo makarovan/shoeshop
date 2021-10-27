@@ -14,6 +14,7 @@ import java.io.Serializable;
 public class Shoes implements Serializable{
     private String name;
     private int price;
+    private int amount;
     
     public Shoes(){
         
@@ -35,9 +36,17 @@ public class Shoes implements Serializable{
         this.price = price;
     }
 
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
     @Override
     public String toString() {
-        return "Shoes model: " + name + ", price: " + price/100;
+        return "Shoes model: " + name + ", price: " + price/100 +", amount: " + amount;
     }
     
     

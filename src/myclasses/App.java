@@ -24,15 +24,17 @@ public class App {
     List <Shoes> shoes = new ArrayList<>();
     List <Buyer> buyers = new ArrayList<>();
     List <Purchase> purchases = new ArrayList<>();
-    //List <Shop> shopMoney = new ArrayList<>();
+    List <Shop> shops = new ArrayList<>();
+    //Shop shopMoney = new Shop();
     Keeping keeper = new FileKeeper();
-    int shopMoney = 0;
+    //int shopMoney = 0;
+    
         
     public App(){
         shoes = keeper.loadShoes();
         buyers = keeper.loadBuyers();
         purchases = keeper.loadPurchases();
-       // shopMoney = keeper.loadShop();
+        shops = keeper.loadShop();
     }
     public void run(){
         String repeat = "y";
@@ -63,12 +65,7 @@ public class App {
                     break;
                     
                 case 2:
-                    System.out.println("Список моделей обуви:");
-                    for (int i = 0; i < shoes.size(); i++) {
-                        if (shoes.get(i)!=null){
-                           System.out.println((i+1)+ " " + shoes.get(i).toString()); 
-                        }
-                    }
+                    printShoes();
                     break;
                 
                 case 3:
@@ -78,19 +75,16 @@ public class App {
                     break;
                 
                 case 4:
-                    System.out.println("Список покупателей");
-                    for (int i = 0; i < buyers.size(); i++) {
-                        if (buyers.get(i)!=null){
-                           System.out.println(buyers.get(i).toString()); 
-                        }
-                    }
+                    printBuyers();
                     break;
                     
                 case 5:
                     System.out.println("Продажа модели");
                     purchases.add(addPurchase());
                     keeper.savePurchases(purchases);
+                    keeper.saveShop(shops);
                     keeper.saveBuyers(buyers);//сохраняем изменение кол-ва денег у покупателя
+                    keeper.saveShoes(shoes);
                     break;
                 
                 case 6:
@@ -112,17 +106,14 @@ public class App {
                     break;
                     
                 case 7:
-                    System.out.println("Доход магазина " + shopMoney/100);
+                    System.out.print("Доход магазина: ");
+                    //System.out.println(shops.get(0).getMoney()/100);
+                    //System.out.println("Доход магазина " + shopMoney/100);
                     break;
                     
                 case 8:
                     System.out.println("Добавление средств покупателю");
-                    System.out.println("Список покупателей");
-                    for (int i = 0; i < buyers.size(); i++) {
-                        if (buyers.get(i)!=null){
-                            System.out.printf("%d. %s%n", (i+1), buyers.get(i).toString()); 
-                        }
-                    }
+                    printBuyers();
                     System.out.print("Выберите покупателя: ");
                     int buyerNum = scanner.nextInt();scanner.nextLine();
                     System.out.print("Введите число денег для пополнения (в центах): ");
@@ -140,6 +131,8 @@ public class App {
         shoe.setName(scanner.nextLine());
         System.out.print("Цена (в центах): ");
         shoe.setPrice(scanner.nextInt());scanner.nextLine();
+        System.out.print("Кол-во на складе: ");
+        shoe.setAmount(scanner.nextInt());scanner.nextLine();
         return shoe;
     }
     
@@ -156,35 +149,27 @@ public class App {
     
     private Purchase addPurchase(){
         Purchase purchase = new Purchase();
-        
-        System.out.println("Список покупателей");
-        for (int i = 0; i < buyers.size(); i++) {
-            if (buyers.get(i)!=null){
-                System.out.printf("%d. %s%n", (i+1), buyers.get(i).toString()); 
-            }
-        }
+        Shop shop = new Shop();
+        shop.setMoney(0);
+
+        printBuyers();
         System.out.print("Номер покупателя: ");
         int buyerNumber = scanner.nextInt();scanner.nextLine();
         
-        System.out.println("Список моделей обуви");
-        for (int i = 0; i < shoes.size(); i++) {
-            if (shoes.get(i)!=null){
-                System.out.printf("%d. %s%n", (i+1), shoes.get(i).toString()); 
-            }
-        }
+        printShoes();
         System.out.print("Номер модели: ");
         int shoesNumber = scanner.nextInt(); scanner.nextLine();
        
         
         //если у покупателя денег больше, чем стоймость обуви, то записываем покупку и отнимаем деньги
-        if(buyers.get(buyerNumber-1).getMoney()>shoes.get(shoesNumber-1).getPrice()){
-            purchase.setBuyer(buyers.get(buyerNumber-1));
-            purchase.setShoes(shoes.get(shoesNumber-1));
-            purchase.setCanceled(true);//покупка прошла
-            buyers.get(buyerNumber-1).setMoney(buyers.get(buyerNumber-1).getMoney()-shoes.get(shoesNumber-1).getPrice());
-            shopMoney = shopMoney+shoes.get(shoesNumber-1).getPrice();
-//            Shop shop = new Shop();
-//            shop.setMoney(shoesNumber);
+        if(buyers.get(buyerNumber-1).getMoney()>shoes.get(shoesNumber-1).getPrice() && shoes.get(shoesNumber-1).getAmount()>0){
+                purchase.setBuyer(buyers.get(buyerNumber-1));
+                purchase.setShoes(shoes.get(shoesNumber-1));
+                purchase.setCanceled(true);//покупка прошла
+                buyers.get(buyerNumber-1).setMoney(buyers.get(buyerNumber-1).getMoney()-shoes.get(shoesNumber-1).getPrice());
+                shoes.get(shoesNumber-1).setAmount(shoes.get(shoesNumber-1).getAmount()-1);
+                //shopMoney = shopMoney+shoes.get(shoesNumber-1).getPrice();
+                //shops.get(0).setMoney(shops.get(0).getMoney()+shoes.get(shoesNumber-1).getPrice());
         }else{
             purchase.setBuyer(buyers.get(buyerNumber-1));
             purchase.setShoes(shoes.get(shoesNumber-1));
@@ -193,7 +178,23 @@ public class App {
         return purchase;
     }
     
+    private void printBuyers(){
+        System.out.println("Список покупателей");
+        for (int i = 0; i < buyers.size(); i++) {
+            if (buyers.get(i)!=null){
+                System.out.printf("%d. %s%n", (i+1), buyers.get(i).toString()); 
+            }
+        }
+    }
     
+    private void printShoes(){
+        System.out.println("Список моделей обуви:");
+        for (int i = 0; i < shoes.size(); i++) {
+            if (shoes.get(i)!=null){
+                System.out.println((i+1)+ " " + shoes.get(i).toString()); 
+            }
+        }
+    }
     
     
     

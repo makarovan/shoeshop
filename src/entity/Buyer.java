@@ -12,9 +12,9 @@ import java.io.Serializable;
  * @author pupil
  */
 public class Buyer implements Serializable{
-    String name;
-    int phone;
-    int money;
+    private String name;
+    private int phone;
+    private int money;
     public Buyer(){
         
     }

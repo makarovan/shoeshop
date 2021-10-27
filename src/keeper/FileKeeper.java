@@ -138,13 +138,13 @@ public class FileKeeper implements Keeping{
     }
 
     @Override
-    public void saveShop(List<Shop> shop) {
+    public void saveShop(List<Shop> shops) {
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try {
             fos = new FileOutputStream("shop");//использование текущей директории, букс будет создан в папке проекта
             oos = new ObjectOutputStream(fos);
-            oos.writeObject(shop);
+            oos.writeObject(shops);
             oos.flush();//проталкивание данных на жесткий диск
         } catch (FileNotFoundException ex) {
             Logger.getLogger(FileKeeper.class.getName()).log(Level.SEVERE, "file shop not found", ex);
@@ -155,13 +155,13 @@ public class FileKeeper implements Keeping{
 
     @Override
     public List<Shop> loadShop() {
-        List <Shop> listShop = new ArrayList();
+        List <Shop> listShops = new ArrayList();
         FileInputStream fis = null;
         ObjectInputStream ois = null;
         try {
             fis = new FileInputStream("shop");
             ois = new ObjectInputStream(fis);
-            listShop = (List<Shop>) ois.readObject();
+            listShops = (List<Shop>) ois.readObject();
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(FileKeeper.class.getName()).log(Level.SEVERE, "file shop not found", ex);
@@ -171,6 +171,9 @@ public class FileKeeper implements Keeping{
             Logger.getLogger(FileKeeper.class.getName()).log(Level.SEVERE, "class not found", ex);
         }
         
-       return listShop;
+       return listShops;
     }
+
+
+
 }

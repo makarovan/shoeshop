@@ -22,6 +22,6 @@ public interface Keeping {
     public List<Buyer> loadBuyers();
     public void savePurchases(List<Purchase> purchases);
     public List<Purchase> loadPurchases();
-    public void saveShop(List<Shop> shop);
+    public void saveShop(List<Shop> shops);
     public List<Shop> loadShop();
 }

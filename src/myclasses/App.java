@@ -25,9 +25,7 @@ public class App {
     List <Buyer> buyers = new ArrayList<>();
     List <Purchase> purchases = new ArrayList<>();
     List <Shop> shops = new ArrayList<>();
-    //Shop shopMoney = new Shop();
     Keeping keeper = new FileKeeper();
-    //int shopMoney = 0;
     
         
     public App(){
@@ -107,8 +105,8 @@ public class App {
                     
                 case 7:
                     System.out.print("Доход магазина: ");
-                    //System.out.println(shops.get(0).getMoney()/100);
-                    //System.out.println("Доход магазина " + shopMoney/100);
+                    shops.add(getMoneyShop());
+                    System.out.println(shops.get(0).getMoney()/100);
                     break;
                     
                 case 8:
@@ -116,10 +114,14 @@ public class App {
                     printBuyers();
                     System.out.print("Выберите покупателя: ");
                     int buyerNum = scanner.nextInt();scanner.nextLine();
-                    System.out.print("Введите число денег для пополнения (в центах): ");
-                    int moneyAdd = scanner.nextInt(); scanner.nextLine();
-                    buyers.get(buyerNum-1).setMoney(buyers.get(buyerNum-1).getMoney()+ moneyAdd);
-                    keeper.saveBuyers(buyers);
+                    if(buyers.contains(buyerNum-1)==false){ //подозрительный вызов?
+                        System.out.println("Покупатель не найден");
+                    }else{
+                        System.out.print("Введите число денег для пополнения (в центах): ");
+                        int moneyAdd = scanner.nextInt(); scanner.nextLine();
+                        buyers.get(buyerNum-1).setMoney(buyers.get(buyerNum-1).getMoney()+ moneyAdd);
+                        keeper.saveBuyers(buyers);
+            }
                     break;
             }
         }while("y".equals(repeat));
@@ -129,8 +131,8 @@ public class App {
         Shoes shoe = new Shoes();
         System.out.print("Название модели: ");
         shoe.setName(scanner.nextLine());
-        System.out.print("Цена (в центах): ");
-        shoe.setPrice(scanner.nextInt());scanner.nextLine();
+        System.out.print("Цена: ");
+        shoe.setPrice(scanner.nextInt()*100);scanner.nextLine();
         System.out.print("Кол-во на складе: ");
         shoe.setAmount(scanner.nextInt());scanner.nextLine();
         return shoe;
@@ -142,15 +144,13 @@ public class App {
         buyer.setName(scanner.nextLine());
         System.out.print("Телефон покупателя: ");
         buyer.setPhone(scanner.nextInt());scanner.nextLine();
-        System.out.print("Средства покупателя (в центах): ");
-        buyer.setMoney(scanner.nextInt());scanner.nextLine();
+        System.out.print("Средства покупателя: ");
+        buyer.setMoney(scanner.nextInt()*100);scanner.nextLine();
         return buyer;
     }
     
     private Purchase addPurchase(){
         Purchase purchase = new Purchase();
-        Shop shop = new Shop();
-        shop.setMoney(0);
 
         printBuyers();
         System.out.print("Номер покупателя: ");
@@ -159,23 +159,32 @@ public class App {
         printShoes();
         System.out.print("Номер модели: ");
         int shoesNumber = scanner.nextInt(); scanner.nextLine();
-       
-        
-        //если у покупателя денег больше, чем стоймость обуви, то записываем покупку и отнимаем деньги
-        if(buyers.get(buyerNumber-1).getMoney()>shoes.get(shoesNumber-1).getPrice() && shoes.get(shoesNumber-1).getAmount()>0){
+        if(buyers.contains(buyerNumber-1)==false || shoes.contains(shoesNumber-1)==false){
+            System.out.println("Покупатель или модель обуви не найдены");
+        }else{
+            //если у покупателя денег больше, чем стоймость обуви, то 
+            //записываем покупку, отнимаем деньги у покупателя, 
+            //добавляем деньги магазину
+            if(buyers.get(buyerNumber-1).getMoney()>shoes.get(shoesNumber-1).getPrice() && shoes.get(shoesNumber-1).getAmount()>0){
+                    purchase.setBuyer(buyers.get(buyerNumber-1));
+                    purchase.setShoes(shoes.get(shoesNumber-1));
+                    purchase.setCanceled(true);//покупка прошла
+                    buyers.get(buyerNumber-1).setMoney(buyers.get(buyerNumber-1).getMoney()-shoes.get(shoesNumber-1).getPrice());
+                    shoes.get(shoesNumber-1).setAmount(shoes.get(shoesNumber-1).getAmount()-1);
+                    shops.get(0).setMoney(shops.get(0).getMoney()+shoes.get(shoesNumber-1).getPrice());
+            }else{
                 purchase.setBuyer(buyers.get(buyerNumber-1));
                 purchase.setShoes(shoes.get(shoesNumber-1));
-                purchase.setCanceled(true);//покупка прошла
-                buyers.get(buyerNumber-1).setMoney(buyers.get(buyerNumber-1).getMoney()-shoes.get(shoesNumber-1).getPrice());
-                shoes.get(shoesNumber-1).setAmount(shoes.get(shoesNumber-1).getAmount()-1);
-                //shopMoney = shopMoney+shoes.get(shoesNumber-1).getPrice();
-                //shops.get(0).setMoney(shops.get(0).getMoney()+shoes.get(shoesNumber-1).getPrice());
-        }else{
-            purchase.setBuyer(buyers.get(buyerNumber-1));
-            purchase.setShoes(shoes.get(shoesNumber-1));
-            purchase.setCanceled(false);//покупка не прошла
+                purchase.setCanceled(false);//покупка не прошла
+            }
         }
         return purchase;
+    }
+    
+    private Shop getMoneyShop(){
+        Shop shop = new Shop();
+        shop.setMoney(0);
+        return shop;
     }
     
     private void printBuyers(){

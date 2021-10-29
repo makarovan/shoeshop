@@ -88,6 +88,7 @@ public class App {
                 case 6:
                     System.out.println("История покупок");
                     int n = 0;
+                    //int shopMoney = 0;
                     for (int i = 0; i < purchases.size(); i++) {
                         if (purchases.get(i)!=null){
                             System.out.printf("%d. Модель %s купил %s, покупка %s%n",
@@ -96,11 +97,15 @@ public class App {
                                         purchases.get(i).getBuyer().getName(),
                                         purchases.get(i).isCanceled());
                             n++;
+//                            if (purchases.get(i).isCanceled()==true){
+//                            shopMoney = shopMoney + purchases.get(i).getShoes().getPrice();
+//                            }
                         }
                     }
                     if (n<1){
                         System.out.println("Нет проданных товаров");
                     }
+                    //System.out.println("Shops Money: " + shopMoney/100);
                     break;
                     
                 case 7:
@@ -114,14 +119,14 @@ public class App {
                     printBuyers();
                     System.out.print("Выберите покупателя: ");
                     int buyerNum = scanner.nextInt();scanner.nextLine();
-                    if(buyers.contains(buyerNum-1)==false){ //подозрительный вызов?
-                        System.out.println("Покупатель не найден");
-                    }else{
-                        System.out.print("Введите число денег для пополнения (в центах): ");
+//                    if(buyers.contains(buyerNum-1)==false){ //подозрительный вызов?
+//                        System.out.println("Покупатель не найден");
+//                    }else{
+                        System.out.print("Введите число денег для пополнения: ");
                         int moneyAdd = scanner.nextInt(); scanner.nextLine();
-                        buyers.get(buyerNum-1).setMoney(buyers.get(buyerNum-1).getMoney()+ moneyAdd);
+                        buyers.get(buyerNum-1).setMoney(buyers.get(buyerNum-1).getMoney()+ moneyAdd*100);
                         keeper.saveBuyers(buyers);
-            }
+                     //}
                     break;
             }
         }while("y".equals(repeat));
@@ -159,9 +164,9 @@ public class App {
         printShoes();
         System.out.print("Номер модели: ");
         int shoesNumber = scanner.nextInt(); scanner.nextLine();
-        if(buyers.contains(buyerNumber-1)==false || shoes.contains(shoesNumber-1)==false){
-            System.out.println("Покупатель или модель обуви не найдены");
-        }else{
+        //if(buyers.contains(buyerNumber-1)==false || shoes.contains(shoesNumber-1)==false){
+        //    System.out.println("Покупатель или модель обуви не найдены");
+        //}else{
             //если у покупателя денег больше, чем стоймость обуви, то 
             //записываем покупку, отнимаем деньги у покупателя, 
             //добавляем деньги магазину
@@ -177,7 +182,7 @@ public class App {
                 purchase.setShoes(shoes.get(shoesNumber-1));
                 purchase.setCanceled(false);//покупка не прошла
             }
-        }
+        //}
         return purchase;
     }
     

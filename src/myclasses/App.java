@@ -119,14 +119,14 @@ public class App {
                     printBuyers();
                     System.out.print("Выберите покупателя: ");
                     int buyerNum = scanner.nextInt();scanner.nextLine();
-//                    if(buyers.contains(buyerNum-1)==false){ //подозрительный вызов?
-//                        System.out.println("Покупатель не найден");
-//                    }else{
+                    //if(buyers.contains(buyerNum-1)==true){ //подозрительный вызов?
                         System.out.print("Введите число денег для пополнения: ");
                         int moneyAdd = scanner.nextInt(); scanner.nextLine();
                         buyers.get(buyerNum-1).setMoney(buyers.get(buyerNum-1).getMoney()+ moneyAdd*100);
                         keeper.saveBuyers(buyers);
-                     //}
+//                    }else{
+//                       System.out.println("Покупатель не найден"); 
+//                     }
                     break;
             }
         }while("y".equals(repeat));

@@ -6,15 +6,24 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  *
  * @author pupil
  */
+@Entity
 public class Purchase implements Serializable{
-    Shoes shoes;
-    Buyer buyer;
-    private boolean canceled;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Shoes shoes;
+    private Buyer buyer;
+    private boolean bought;
     
     public Purchase(){
         
@@ -36,17 +45,62 @@ public class Purchase implements Serializable{
         this.buyer = buyer;
     }
 
-    public boolean isCanceled() {
-        return canceled;
+    public boolean isBought() {
+        return bought;
     }
 
-    public void setCanceled(boolean canceled) {
-        this.canceled = canceled;
+    public void setBought(boolean bought) {
+        this.bought = bought;
     }
 
     @Override
     public String toString() {
-        return "Purchase: " + "shoes: " + shoes + ", buyer: " + buyer + ", покупка прошла: " + canceled;
+        return "Purchase: " + "shoes: " + shoes + ", buyer: " + buyer + ", покупка прошла: " + bought;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 71 * hash + Objects.hashCode(this.id);
+        hash = 71 * hash + Objects.hashCode(this.shoes);
+        hash = 71 * hash + Objects.hashCode(this.buyer);
+        hash = 71 * hash + (this.bought ? 1 : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Purchase other = (Purchase) obj;
+        if (this.bought != other.bought) {
+            return false;
+        }
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.shoes, other.shoes)) {
+            return false;
+        }
+        if (!Objects.equals(this.buyer, other.buyer)) {
+            return false;
+        }
+        return true;
     }
     
     

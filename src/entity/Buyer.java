@@ -6,17 +6,34 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  *
  * @author pupil
  */
+@Entity
 public class Buyer implements Serializable{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long Id;
     private String name;
-    private int phone;
+    private String phone;
     private int money;
     public Buyer(){
         
+    }
+
+    public Long getId() {
+        return Id;
+    }
+
+    public void setId(Long Id) {
+        this.Id = Id;
     }
 
     public String getName() {
@@ -27,11 +44,11 @@ public class Buyer implements Serializable{
         this.name = name;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
@@ -47,6 +64,47 @@ public class Buyer implements Serializable{
     public String toString() {
         return "Buyer: " +  name + ", phone: " + phone + ", money:" + money/100;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + Objects.hashCode(this.Id);
+        hash = 89 * hash + Objects.hashCode(this.name);
+        hash = 89 * hash + Objects.hashCode(this.phone);
+        hash = 89 * hash + this.money;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Buyer other = (Buyer) obj;
+        if (this.money != other.money) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.phone, other.phone)) {
+            return false;
+        }
+        if (!Objects.equals(this.Id, other.Id)) {
+            return false;
+        }
+        return true;
+    }
+
+  
+
+    
 
     
     

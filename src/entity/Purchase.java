@@ -23,10 +23,19 @@ public class Purchase implements Serializable{
     private Long id;
     private Shoes shoes;
     private Buyer buyer;
+    private int price;
     private boolean bought;
     
     public Purchase(){
         
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public Shoes getShoes() {
@@ -69,10 +78,11 @@ public class Purchase implements Serializable{
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 71 * hash + Objects.hashCode(this.id);
-        hash = 71 * hash + Objects.hashCode(this.shoes);
-        hash = 71 * hash + Objects.hashCode(this.buyer);
-        hash = 71 * hash + (this.bought ? 1 : 0);
+        hash = 37 * hash + Objects.hashCode(this.id);
+        hash = 37 * hash + Objects.hashCode(this.shoes);
+        hash = 37 * hash + Objects.hashCode(this.buyer);
+        hash = 37 * hash + this.price;
+        hash = 37 * hash + (this.bought ? 1 : 0);
         return hash;
     }
 
@@ -88,6 +98,9 @@ public class Purchase implements Serializable{
             return false;
         }
         final Purchase other = (Purchase) obj;
+        if (this.price != other.price) {
+            return false;
+        }
         if (this.bought != other.bought) {
             return false;
         }
@@ -102,6 +115,7 @@ public class Purchase implements Serializable{
         }
         return true;
     }
+
     
     
 }

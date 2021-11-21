@@ -28,20 +28,20 @@ public class App {
     private List <Shoes> shoes = new ArrayList<>();
     private List <Buyer> buyers = new ArrayList<>();
     private List <Purchase> purchases = new ArrayList<>();
-    private List <Shop> shops = new ArrayList<>();
+   //private List <Shop> shops = new ArrayList<>();
     private Keeping keeper;
     
         
     public App(){
-        if(App.isBase){
-            keeper = new BaseKeeper(); //база данных
-        }else{
+        //if(App.isBase){
+            //keeper = new BaseKeeper(); //база данных
+        //else{
             keeper = new FileKeeper(); //файлы
-        }
+        //}
         shoes = keeper.loadShoes();
         buyers = keeper.loadBuyers();
         purchases = keeper.loadPurchases();
-        shops = keeper.loadShop();
+        //shops = keeper.loadShop();
     }
     public void run(){
         String repeat = "y";
@@ -164,29 +164,30 @@ public class App {
         if(buyers.get(buyerNumber-1).getMoney()>shoes.get(shoesNumber-1).getPrice() && shoes.get(shoesNumber-1).getAmount()>0){
             purchase.setBuyer(buyers.get(buyerNumber-1));
             purchase.setShoes(shoes.get(shoesNumber-1));
+            purchase.setPrice(shoes.get(shoesNumber-1).getPrice());
             purchase.setBought(true);//покупка прошла
             buyers.get(buyerNumber-1).setMoney(buyers.get(buyerNumber-1).getMoney()-shoes.get(shoesNumber-1).getPrice());
             shoes.get(shoesNumber-1).setAmount(shoes.get(shoesNumber-1).getAmount()-1);
-            shops.get(0).setMoney(shops.get(0).getMoney()+shoes.get(shoesNumber-1).getPrice());
+            //shops.get(0).setMoney(shops.get(0).getMoney()+shoes.get(shoesNumber-1).getPrice());
         }else{
             purchase.setBuyer(buyers.get(buyerNumber-1));
             purchase.setShoes(shoes.get(shoesNumber-1));
+            purchase.setPrice(shoes.get(shoesNumber-1).getPrice());
             purchase.setBought(false);//покупка не прошла
-
         }
 
         purchases.add(purchase);
         keeper.savePurchases(purchases);
-        keeper.saveShop(shops);
+        //keeper.saveShop(shops);
         keeper.saveBuyers(buyers);//сохраняем изменение кол-ва денег у покупателя
         keeper.saveShoes(shoes);
     }
     
-    private Shop getMoneyShop(){
-        Shop shop = new Shop();
-        shop.setMoney(0);
-        return shop;
-    }
+//    private Shop getMoneyShop(){
+//        Shop shop = new Shop();
+//        shop.setMoney(0);
+//        return shop;
+//    }
     
     private Set<Integer> printBuyers(){
         Set<Integer> setNumbersBuyers = new HashSet();
@@ -245,33 +246,43 @@ public class App {
         }while(true);  
     }
     
-    private void purchasesHistory(){
+    private Set<Integer> purchasesHistory(){
         System.out.println("История покупок");
-        int n = 0;
-        //int shopMoney = 0;
+        Set<Integer> setNumberPurchases = new HashSet();
         for (int i = 0; i < purchases.size(); i++) {
             if (purchases.get(i)!=null){
-                System.out.printf("%d. Модель %s купил %s, покупка %s%n",
+                System.out.printf("%d. Модель %s купил %s, покупка %s, стоймость: %d%n",
                             (i+1),
                             purchases.get(i).getShoes().getName(), 
                             purchases.get(i).getBuyer().getName(),
-                            purchases.get(i).isBought());
-                n++;
-//              if (purchases.get(i).isBought()==true){
-//                  shopMoney = shopMoney + purchases.get(i).getShoes().getPrice();
-//              }
+                            purchases.get(i).isBought(),
+                            purchases.get(i).getPrice()/100
+                        );
+                setNumberPurchases.add(i+1);
             }
         }
-        if (n<1){
-            System.out.println("Нет проданных товаров");
+        if(setNumberPurchases.isEmpty()){
+            System.out.println("Список покупок пуст");
         }
-        //System.out.println("Shops Money: " + shopMoney/100);
+        return setNumberPurchases;
     }
     
-    private void shopMoney(){
-        System.out.print("Доход магазина: ");
-        shops.add(getMoneyShop());
-        System.out.println(shops.get(0).getMoney()/100);
+    private Set<Integer> shopMoney(){
+        Set <Integer> setNumberPurchases = new HashSet();
+        System.out.println("Доход магазина");
+        int money=0;
+        for (int i = 0; i < purchases.size(); i++) {
+            if (purchases.get(i)!=null){
+                money = money+purchases.get(i).getPrice();
+                setNumberPurchases.add(i+1);
+            }
+        }
+        if(setNumberPurchases.isEmpty()){
+            System.out.println("Список покупок пуст");
+        }else{
+            System.out.println("Доход магазина: "+ money/100);
+        }
+        return setNumberPurchases;
     }
     
     private void addMoneyToBuyer(){
@@ -307,14 +318,14 @@ public class App {
             System.out.print("Введите новое название: ");
             shoes.get(shoesNumber-1).setName(scanner.nextLine());
         }
-        System.out.println("Редактировать цену:" + shoes.get(shoesNumber-1).getPrice());
+        System.out.println("Редактировать цену:" + shoes.get(shoesNumber-1).getPrice()/100);
         System.out.print("y/n: ");
         answer = scanner.nextLine();
         if("y".equals(answer)){
             System.out.print("Введите новую цену: ");
-            shoes.get(shoesNumber-1).setPrice(getNumber());
+            shoes.get(shoesNumber-1).setPrice(getNumber()*100);
         }
-        System.out.println("Добавить экземпляры? Сейчас на складе: " + shoes.get(shoesNumber-1).getAmount());
+        System.out.println("Изменить количество экземпляров? Сейчас на складе: " + shoes.get(shoesNumber-1).getAmount());
         System.out.print("y/n: ");
         answer = scanner.nextLine();
         if("y".equals(answer)){
@@ -356,7 +367,7 @@ public class App {
             System.out.print("Введите новый телефон: ");
             buyers.get(buyerNumber-1).setPhone(scanner.nextLine());
         }
-        System.out.println("Внести деньги на счет:" + buyers.get(buyerNumber-1).getMoney()/100);
+        System.out.println("Изменить количество денег:" + buyers.get(buyerNumber-1).getMoney());
         System.out.print("y/n: ");
         answer = scanner.nextLine();
         if("y".equals(answer)){

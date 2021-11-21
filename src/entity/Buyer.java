@@ -62,7 +62,7 @@ public class Buyer implements Serializable{
 
     @Override
     public String toString() {
-        return "Buyer: " +  name + ", phone: " + phone + ", money:" + money/100;
+        return "Buyer: " +  name + ", phone: " + phone + ", money:" + money;
     }
 
     @Override

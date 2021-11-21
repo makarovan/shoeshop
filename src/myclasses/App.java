@@ -159,10 +159,10 @@ public class App {
         printShoes();
         System.out.print("Номер модели: ");
         int shoesNumber = scanner.nextInt(); scanner.nextLine();
-        if(buyers.contains(buyerNumber-1)==false || shoes.contains(shoesNumber-1)==false){
+        if(buyers.contains(buyerNumber-1)==false || shoes.contains(shoesNumber-1)==false){ //подозрительный вывод
             System.out.println("Покупатель или модель обуви не найдены");
         }else{
-            //если у покупателя денег больше, чем стоймость обуви, то 
+            //если у покупателя денег больше, чем стоймость обуви, и на складе есть товар, то 
             //записываем покупку, отнимаем деньги у покупателя, 
             //добавляем деньги магазину
             if(buyers.get(buyerNumber-1).getMoney()>shoes.get(shoesNumber-1).getPrice() && shoes.get(shoesNumber-1).getAmount()>0){

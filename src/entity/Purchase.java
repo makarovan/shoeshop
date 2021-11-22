@@ -24,9 +24,36 @@ public class Purchase implements Serializable{
     private Shoes shoes;
     private Buyer buyer;
     private boolean bought;
+    private int price;
+    private int month;
+    private int year;
     
     public Purchase(){
         
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public Shoes getShoes() {
@@ -68,11 +95,14 @@ public class Purchase implements Serializable{
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 71 * hash + Objects.hashCode(this.id);
-        hash = 71 * hash + Objects.hashCode(this.shoes);
-        hash = 71 * hash + Objects.hashCode(this.buyer);
-        hash = 71 * hash + (this.bought ? 1 : 0);
+        int hash = 3;
+        hash = 47 * hash + Objects.hashCode(this.id);
+        hash = 47 * hash + Objects.hashCode(this.shoes);
+        hash = 47 * hash + Objects.hashCode(this.buyer);
+        hash = 47 * hash + (this.bought ? 1 : 0);
+        hash = 47 * hash + this.price;
+        hash = 47 * hash + this.month;
+        hash = 47 * hash + this.year;
         return hash;
     }
 
@@ -91,6 +121,15 @@ public class Purchase implements Serializable{
         if (this.bought != other.bought) {
             return false;
         }
+        if (this.price != other.price) {
+            return false;
+        }
+        if (this.month != other.month) {
+            return false;
+        }
+        if (this.year != other.year) {
+            return false;
+        }
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
@@ -102,6 +141,7 @@ public class Purchase implements Serializable{
         }
         return true;
     }
-    
+
+       
     
 }

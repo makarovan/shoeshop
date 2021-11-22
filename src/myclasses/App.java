@@ -11,10 +11,13 @@ import entity.Shoes;
 import entity.Shop;
 import interfaces.Keeping;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.TimeZone;
 import keeper.FileKeeper;
 import keeper.BaseKeeper;
 
@@ -25,10 +28,11 @@ import keeper.BaseKeeper;
 public class App {
     public static boolean isBase;
     private Scanner scanner = new Scanner(System.in);
+    private Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Tallinn"));
     private List <Shoes> shoes = new ArrayList<>();
     private List <Buyer> buyers = new ArrayList<>();
     private List <Purchase> purchases = new ArrayList<>();
-    private List <Shop> shops = new ArrayList<>();
+    //private List <Shop> shops = new ArrayList<>();
     private Keeping keeper;
     
         
@@ -41,7 +45,6 @@ public class App {
         shoes = keeper.loadShoes();
         buyers = keeper.loadBuyers();
         purchases = keeper.loadPurchases();
-        shops = keeper.loadShop();
     }
     public void run(){
         String repeat = "y";
@@ -165,28 +168,26 @@ public class App {
             purchase.setBuyer(buyers.get(buyerNumber-1));
             purchase.setShoes(shoes.get(shoesNumber-1));
             purchase.setBought(true);//покупка прошла
+            purchase.setPrice(shoes.get(shoesNumber-1).getPrice());
             buyers.get(buyerNumber-1).setMoney(buyers.get(buyerNumber-1).getMoney()-shoes.get(shoesNumber-1).getPrice());
             shoes.get(shoesNumber-1).setAmount(shoes.get(shoesNumber-1).getAmount()-1);
-            shops.get(0).setMoney(shops.get(0).getMoney()+shoes.get(shoesNumber-1).getPrice());
+            purchase.setMonth(cal.get(Calendar.MONTH));
+            purchase.setYear(cal.get(Calendar.YEAR));
         }else{
             purchase.setBuyer(buyers.get(buyerNumber-1));
             purchase.setShoes(shoes.get(shoesNumber-1));
+            purchase.setMonth(cal.get(Calendar.MONTH));
+            purchase.setYear(cal.get(Calendar.YEAR));
+            purchase.setPrice(shoes.get(shoesNumber-1).getPrice());
             purchase.setBought(false);//покупка не прошла
         }
 
         purchases.add(purchase);
         keeper.savePurchases(purchases);
-        keeper.saveShop(shops);
         keeper.saveBuyers(buyers);//сохраняем изменение кол-ва денег у покупателя
         keeper.saveShoes(shoes);
     }
-    
-    private Shop getMoneyShop(){
-        Shop shop = new Shop();
-        shop.setMoney(0);
-        return shop;
-    }
-    
+
     private Set<Integer> printBuyers(){
         Set<Integer> setNumbersBuyers = new HashSet();
         System.out.println("Список покупателей");
@@ -244,33 +245,49 @@ public class App {
         }while(true);  
     }
     
-    private void purchasesHistory(){
+    private Set<Integer> purchasesHistory(){
         System.out.println("История покупок");
-        int n = 0;
-        //int shopMoney = 0;
+        Set<Integer> setNumberPurchases = new HashSet();
         for (int i = 0; i < purchases.size(); i++) {
             if (purchases.get(i)!=null){
-                System.out.printf("%d. Модель %s купил %s, покупка %s%n",
+                System.out.printf("%d. Модель %s купил %s, покупка %s, стоймость: %d%n",
                             (i+1),
                             purchases.get(i).getShoes().getName(), 
                             purchases.get(i).getBuyer().getName(),
-                            purchases.get(i).isBought());
-                n++;
-//              if (purchases.get(i).isBought()==true){
-//                  shopMoney = shopMoney + purchases.get(i).getShoes().getPrice();
-//              }
+                            purchases.get(i).isBought(),
+                            purchases.get(i).getPrice()/100
+                        );
+                setNumberPurchases.add(i+1);
             }
         }
-        if (n<1){
-            System.out.println("Нет проданных товаров");
+        if(setNumberPurchases.isEmpty()){
+            System.out.println("Список покупок пуст");
         }
-        //System.out.println("Shops Money: " + shopMoney/100);
+        return setNumberPurchases;
     }
     
-    private void shopMoney(){
-        System.out.print("Доход магазина: ");
-        shops.add(getMoneyShop());
-        System.out.println(shops.get(0).getMoney()/100);
+     private Set<Integer> shopMoney(){
+        Set <Integer> setNumberPurchases = new HashSet();
+        System.out.print("Доход магазина. Введите месяц: ");
+        int monthMoney = getNumber();
+        System.out.print("Введите год: ");
+        int yearMoney = getNumber();
+        int money=0;
+        for (int i = 0; i < purchases.size(); i++) {
+            if (purchases.get(i)!=null && 
+                    purchases.get(i).getMonth()+1 == monthMoney && 
+                    purchases.get(i).getYear()==yearMoney &&
+                    purchases.get(i).isBought()==true){
+                money = money+purchases.get(i).getPrice();
+                setNumberPurchases.add(i+1);
+            }
+        }
+        if(setNumberPurchases.isEmpty()){
+            System.out.println("Список покупок пуст");
+        }else{
+            System.out.println("Доход магазина за "+monthMoney+"."+yearMoney +" : " + money/100);
+        }
+        return setNumberPurchases;
     }
     
     private void addMoneyToBuyer(){
@@ -305,19 +322,18 @@ public class App {
             System.out.print("Введите новое название: ");
             shoes.get(shoesNumber-1).setName(scanner.nextLine());
         }
-        System.out.println("Редактировать цену:" + shoes.get(shoesNumber-1).getPrice());
+        System.out.println("Редактировать цену:" + shoes.get(shoesNumber-1).getPrice()/100);
         System.out.print("y/n: ");
         answer = scanner.nextLine();
         if("y".equals(answer)){
             System.out.print("Введите новую цену: ");
-            shoes.get(shoesNumber-1).setPrice(getNumber());
+            shoes.get(shoesNumber-1).setPrice(getNumber()*100);
         }
-        System.out.println("Добавить экземпляры? Сейчас на складе: " + shoes.get(shoesNumber-1).getAmount());
+        System.out.println("Изменить количество экземпляров? Сейчас на складе: " + shoes.get(shoesNumber-1).getAmount());
         System.out.print("y/n: ");
         answer = scanner.nextLine();
         if("y".equals(answer)){
             System.out.print("Введите количество: ");
-            int oldAmount = shoes.get(shoesNumber-1).getAmount();
             int newAmount;
             do{
                 newAmount = getNumber();
@@ -326,20 +342,20 @@ public class App {
                 }
                 System.out.println("Попробуй еще");
             }while(true);
-            shoes.get(shoesNumber-1).setAmount(newAmount+oldAmount);
+            shoes.get(shoesNumber-1).setAmount(newAmount);
         }
         keeper.saveShoes(shoes);  
     }
-    
+
     private void updateBuyer(){
         System.out.println("Изменение данных покупателя");
+        if(quit()) return;
         Set <Integer> setNumbersBuyers = printBuyers();
         if(setNumbersBuyers.isEmpty()){//если книг нет то закроется
             return;
         }
         System.out.print("Введите номер покупателя из списка: ");
         int buyerNumber = insertNumber(setNumbersBuyers);
-        //System.out.println(books.get(bookNumber-1));
         System.out.println("Редактировать поле название:" + buyers.get(buyerNumber-1).getName());
         System.out.print("y/n: ");
         String answer = scanner.nextLine();
@@ -354,12 +370,11 @@ public class App {
             System.out.print("Введите новый телефон: ");
             buyers.get(buyerNumber-1).setPhone(scanner.nextLine());
         }
-        System.out.println("Внести деньги на счет:" + buyers.get(buyerNumber-1).getMoney()/100);
+        System.out.println("Изменить количество денег:" + buyers.get(buyerNumber-1).getMoney()/100);
         System.out.print("y/n: ");
         answer = scanner.nextLine();
         if("y".equals(answer)){
             System.out.print("Введите количество: ");
-            int oldMoney = buyers.get(buyerNumber-1).getMoney();
             int newMoney;
             do{
                 newMoney = getNumber();
@@ -368,10 +383,8 @@ public class App {
                 }
                 System.out.println("Попробуй еще");
             }while(true);
-            buyers.get(buyerNumber-1).setMoney(newMoney+oldMoney);
+            buyers.get(buyerNumber-1).setMoney(newMoney*100);
         }
         keeper.saveBuyers(buyers); 
     }
 }
-    
-

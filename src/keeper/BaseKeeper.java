@@ -22,7 +22,7 @@ import javax.persistence.Persistence;
  * @author pupil
  */
 public class BaseKeeper implements Keeping{
-    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("jktv20ShoeStorePU");
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("shoeshopjktv20PU");
     private EntityManager em = emf.createEntityManager();
     private EntityTransaction tx = em.getTransaction();
 
@@ -116,4 +116,5 @@ public class BaseKeeper implements Keeping{
         }
         return shops;
     }
+
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package myclasses;
+package app;
 
 import entity.Buyer;
 import entity.Purchase;
@@ -51,7 +51,7 @@ public class App {
         do{
             System.out.println("Выберите задачу");
             System.out.println("0: закончить программу");
-            System.out.println("1: добавить обувь");
+            System.out.println("1: добавить обув ь");
             System.out.println("2: Вывести список моделей обуви");
             System.out.println("3: Добавить покупателя");
             System.out.println("4: Список покупателей");
@@ -167,7 +167,7 @@ public class App {
         if(buyers.get(buyerNumber-1).getMoney()>shoes.get(shoesNumber-1).getPrice() && shoes.get(shoesNumber-1).getAmount()>0){
             purchase.setBuyer(buyers.get(buyerNumber-1));
             purchase.setShoes(shoes.get(shoesNumber-1));
-            purchase.setBought(true);//покупка прошла
+            //purchase.setBought(true);//покупка прошла
             purchase.setPrice(shoes.get(shoesNumber-1).getPrice());
             buyers.get(buyerNumber-1).setMoney(buyers.get(buyerNumber-1).getMoney()-shoes.get(shoesNumber-1).getPrice());
             shoes.get(shoesNumber-1).setAmount(shoes.get(shoesNumber-1).getAmount()-1);
@@ -179,7 +179,7 @@ public class App {
             purchase.setMonth(cal.get(Calendar.MONTH));
             purchase.setYear(cal.get(Calendar.YEAR));
             purchase.setPrice(shoes.get(shoesNumber-1).getPrice());
-            purchase.setBought(false);//покупка не прошла
+            //purchase.setBought(false);//покупка не прошла
         }
 
         purchases.add(purchase);
@@ -250,11 +250,11 @@ public class App {
         Set<Integer> setNumberPurchases = new HashSet();
         for (int i = 0; i < purchases.size(); i++) {
             if (purchases.get(i)!=null){
-                System.out.printf("%d. Модель %s купил %s, покупка %s, стоймость: %d%n",
+                System.out.printf("%d. Модель %s купил %s, покупка, стоймость: %d%n",
                             (i+1),
                             purchases.get(i).getShoes().getName(), 
                             purchases.get(i).getBuyer().getName(),
-                            purchases.get(i).isBought(),
+                            //purchases.get(i).isBought(),
                             purchases.get(i).getPrice()/100
                         );
                 setNumberPurchases.add(i+1);
@@ -276,8 +276,8 @@ public class App {
         for (int i = 0; i < purchases.size(); i++) {
             if (purchases.get(i)!=null && 
                     purchases.get(i).getMonth()+1 == monthMoney && 
-                    purchases.get(i).getYear()==yearMoney &&
-                    purchases.get(i).isBought()==true){
+                    purchases.get(i).getYear()==yearMoney /*&&
+                    purchases.get(i).isBought()==true*/){
                 money = money+purchases.get(i).getPrice();
                 setNumberPurchases.add(i+1);
             }

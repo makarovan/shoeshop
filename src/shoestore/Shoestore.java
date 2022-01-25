@@ -5,7 +5,7 @@
  */
 package shoestore;
 
-import myclasses.App;
+import app.App;
 
 /**
  *

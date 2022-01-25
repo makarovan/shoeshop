@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -21,9 +22,11 @@ public class Purchase implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @OneToOne
     private Shoes shoes;
+    @OneToOne
     private Buyer buyer;
-    private boolean bought;
+    //private boolean bought;
     private int price;
     private int month;
     private int year;
@@ -72,17 +75,21 @@ public class Purchase implements Serializable{
         this.buyer = buyer;
     }
 
-    public boolean isBought() {
-        return bought;
-    }
+//    public boolean isBought() {
+//        return bought;
+//    }
+//
+//    public void setBought(boolean bought) {
+//        this.bought = bought;
+//    }
 
-    public void setBought(boolean bought) {
-        this.bought = bought;
-    }
-
+//    @Override
+//    public String toString() {
+//        return "Purchase: " + "shoes: " + shoes + ", buyer: " + buyer + ", покупка прошла: " + bought;
+//    }
     @Override
     public String toString() {
-        return "Purchase: " + "shoes: " + shoes + ", buyer: " + buyer + ", покупка прошла: " + bought;
+        return "Purchase: " + "shoes: " + shoes + ", buyer: " + buyer;
     }
 
     public Long getId() {
@@ -99,7 +106,7 @@ public class Purchase implements Serializable{
         hash = 47 * hash + Objects.hashCode(this.id);
         hash = 47 * hash + Objects.hashCode(this.shoes);
         hash = 47 * hash + Objects.hashCode(this.buyer);
-        hash = 47 * hash + (this.bought ? 1 : 0);
+//        hash = 47 * hash + (this.bought ? 1 : 0);
         hash = 47 * hash + this.price;
         hash = 47 * hash + this.month;
         hash = 47 * hash + this.year;
@@ -118,9 +125,9 @@ public class Purchase implements Serializable{
             return false;
         }
         final Purchase other = (Purchase) obj;
-        if (this.bought != other.bought) {
-            return false;
-        }
+//        if (this.bought != other.bought) {
+//            return false;
+//        }
         if (this.price != other.price) {
             return false;
         }

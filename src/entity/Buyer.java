@@ -24,6 +24,7 @@ public class Buyer implements Serializable{
     private String name;
     private String phone;
     private int money;
+    
     public Buyer(){
         
     }

@@ -11,12 +11,14 @@ import java.awt.Font;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  *
  * @author pupil
  */
 public class CaptionComponent extends JPanel{
+    private JTextField editor;
 
     public CaptionComponent(String text, int widthWindow, int heightPanel) {
         initComponents(text, widthWindow, heightPanel);
@@ -37,4 +39,7 @@ public class CaptionComponent extends JPanel{
         this.add(caption);
     }
     
+    public JTextField getEditor() {
+        return editor;
+    }
 }

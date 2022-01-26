@@ -42,11 +42,11 @@ public class PurchaseFacade extends AbstractFacade<Purchase>{
 //        return getEntityManager().createQuery("SELECT h FROM History h WHERE h.returnDate = null").getResultList();
 //    }
 
-//    public List<Purchase> findAll(Buyer buyer) {
-//        return getEntityManager().createQuery("SELECT h FROM Purchase h WHERE h.buyer = :buyer AND h.returnDate = null")
-//                .setParameter("reader", reader)
-//                .getResultList();
-//    }
+    public List<Purchase> findAll(int year, int month) {
+        return getEntityManager().createQuery("SELECT h.price FROM Purchase h WHERE h.year = :year AND h.month = month")
+                .setParameter(year, month)
+                .getResultList();
+    }
 
     
 }

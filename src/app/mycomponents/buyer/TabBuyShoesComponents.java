@@ -53,7 +53,8 @@ class TabBuyShoesComponents extends JPanel{
     private ShoesFacade shoesFacade = new ShoesFacade(); 
     //private BuyerFacade buyerFacade = new BuyerFacade(); 
     private Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Tallinn"));
-     private UserRolesFacade userRolesFacade = new UserRolesFacade();
+    private UserRolesFacade userRolesFacade = new UserRolesFacade();
+    private Shoes shoes;
     
     public TabBuyShoesComponents(int widthPanel) {
         setPreferredSize(new Dimension(GuiApp.WIDTH_WINDOWS, GuiApp.HEIGHT_WINDOWS));
@@ -132,9 +133,18 @@ class TabBuyShoesComponents extends JPanel{
                     infoComponent.getInfo().setText("вы не выбрали обувь");
                     return;
                 }
-//                if(buyer.getMoney()<shoes.getPrice() && shoes.getAmount()>0){
-//                
-//                }
+                
+                //криво но работает
+                try{
+                    if(buyer.getMoney()<shoes.getPrice() && shoes.getAmount()>0){
+                        infoComponent.getInfo().setText("У вас не хватает средств для покупки");
+                        return;
+                    }
+                }catch(Exception e){
+                    infoComponent.getInfo().setText("У вас не хватает средств для покупки");
+                    return;
+                }
+                
                 
                 try {
                      for (Shoes shoes : shoess) {

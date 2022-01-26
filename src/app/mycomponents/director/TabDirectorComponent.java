@@ -74,8 +74,10 @@ public class TabDirectorComponent extends JPanel{
         tabDirector.addChangeListener(new ChangeListener(){
             @Override
             public void stateChanged(ChangeEvent ce) {
-                if(tabDirector.indexOfTab("Доход магазина")>0){
+                //if(tabDirector.indexOfTab("Доход магазина")>0){
                     //tabIncomeComponent.addComboBoxModel();
+                /*}else*/ if(tabDirector.indexOfTab("Редактировать покупателя")>0){
+                    tabEditBuyerComponents.addComboBoxModel();
                 }
             }
         });        

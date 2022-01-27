@@ -134,20 +134,24 @@ class TabBuyShoesComponents extends JPanel{
                     return;
                 }
                 
-                //криво но работает
-                try{
-                    if(buyer.getMoney()<shoes.getPrice() && shoes.getAmount()>0){
-                        infoComponent.getInfo().setText("У вас не хватает средств для покупки");
-                        return;
-                    }
-                }catch(Exception e){
-                    infoComponent.getInfo().setText("У вас не хватает средств для покупки");
-                    return;
-                }
+                //не работает
+//                try{
+//                    if(buyer.getMoney()<shoes.getPrice() && shoes.getAmount()>0){
+//                        infoComponent.getInfo().setText("У вас не хватает средств для покупки");
+//                        return;
+//                    }
+//                }catch(Exception e){
+//                    infoComponent.getInfo().setText("У вас не хватает средств для покупки");
+//                    return;
+//                }
                 
                 
                 try {
-                     for (Shoes shoes : shoess) {
+                    for (Shoes shoes : shoess) {
+                        if(buyer.getMoney()<shoes.getPrice() && shoes.getAmount()>0){
+                            infoComponent.getInfo().setText("У вас не хватает средств для покупки");
+                            return;
+                        }
                         Purchase purchase = new Purchase();
                         shoes.setAmount(shoes.getAmount()-1);
                         shoesFacade.edit(shoes);

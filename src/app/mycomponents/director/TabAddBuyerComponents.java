@@ -11,7 +11,10 @@ import app.mycomponents.CaptionComponent;
 import app.mycomponents.EditorComponent;
 import app.mycomponents.InfoComponent;
 import entity.Buyer;
+import entity.User;
 import facade.BuyerFacade;
+import facade.UserFacade;
+import facade.UserRolesFacade;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -54,17 +57,17 @@ public class TabAddBuyerComponents extends JPanel{
         buyerNameComponent = new EditorComponent("Имя покупателя", widthPanel, 31, 300);
         this.add(buyerNameComponent);
         
-        loginComponent = new EditorComponent("Логин", widthPanel, 31, 200);
-        this.add(loginComponent);
-        
-        passwordComponent = new EditorComponent("Пароль", widthPanel, 31, 200);
-        this.add(passwordComponent);
-        
         buyerPhoneComponent = new EditorComponent("Номер телефона покупателя", widthPanel, 31, 240);
         this.add(buyerPhoneComponent);
         
         buyerMoneyComponent = new EditorComponent("Количество средств у покупателя", widthPanel, 31, 240);
         this.add(buyerMoneyComponent);
+        
+        loginComponent = new EditorComponent("Логин", widthPanel, 31, 200);
+        this.add(loginComponent);
+        
+        passwordComponent = new EditorComponent("Пароль", widthPanel, 31, 200);
+        this.add(passwordComponent);
         
         buttonComponent = new ButtonComponent("Добавить покупателя", widthPanel, 31, 160, 150);
         this.add(buttonComponent);
@@ -94,9 +97,28 @@ public class TabAddBuyerComponents extends JPanel{
                 }
                 buyer.setMoney(Integer.parseInt(buyerMoneyComponent.getEditor().getText()));
                 
+                User newUser = new User();
+                if(loginComponent.getEditor().getText().isEmpty()){
+                   infoComponent.getInfo().setText("Введите логин");
+                    return;
+                } 
+                newUser.setLogin(loginComponent.getEditor().getText());
+                
+                if(passwordComponent.getEditor().getText().isEmpty()){
+                    infoComponent.getInfo().setText("Введите пароль");
+                    return;
+                } 
+                newUser.setPassword(passwordComponent.getEditor().getText());
+                
                 BuyerFacade buyerFacade = new BuyerFacade();
                 try{
                     buyerFacade.create(buyer);
+                    newUser.setBuyer(buyer);
+                    UserFacade userFacade = new UserFacade();
+                    userFacade.create(newUser);
+                    //не добавляет в userroles
+                    UserRolesFacade userRolesFacade = new UserRolesFacade();
+                    userRolesFacade.setRole("BUYER",newUser);
                     infoComponent.getInfo().setText("Покупатель успешно добавлен");     
                     buyerNameComponent.getEditor().setText("");
                     buyerPhoneComponent.getEditor().setText("");

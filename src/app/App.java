@@ -51,7 +51,7 @@ public class App {
         do{
             System.out.println("Выберите задачу");
             System.out.println("0: закончить программу");
-            System.out.println("1: добавить обув ь");
+            System.out.println("1: добавить обувь");
             System.out.println("2: Вывести список моделей обуви");
             System.out.println("3: Добавить покупателя");
             System.out.println("4: Список покупателей");

@@ -76,26 +76,25 @@ public class GuiApp extends JFrame{
             user.setBuyer(buyer);
             userFacade.create(user);
             Role role = new Role();
-            UserRoles userRoles = new UserRoles();
             role.setRoleName("ADMINISTRATOR");//ROLES SHOULD BE WRITTEN IN CAPS
-            userRoles.setRole(role);
-            userRoles = new UserRoles();
-            userRoles.setUser(user);
             roleFacade.create(role);
+            UserRoles userRoles = new UserRoles();
+            userRoles.setUser(user);
+            userRoles.setRole(role);
             userRolesFacade.create(userRoles);
             role = new Role();
             role.setRoleName("MANAGER");
-            userRoles.setRole(role);
-            userRoles = new UserRoles();
-            userRoles.setUser(user);
             roleFacade.create(role);
+            userRoles = new UserRoles();
+            userRoles.setRole(role);
+            userRoles.setUser(user);
             userRolesFacade.create(userRoles);
             role = new Role();
             role.setRoleName("BUYER");
-            userRoles.setRole(role);
-            userRoles = new UserRoles();
-            userRoles.setUser(user);
             roleFacade.create(role);
+            userRoles = new UserRoles();
+            userRoles.setRole(role);
+            userRoles.setUser(user);
             userRolesFacade.create(userRoles);
         }
         initComponents();
@@ -197,7 +196,7 @@ public class GuiApp extends JFrame{
             }
         });
         
-        //зарегестрироваться
+        //зарегистрироваться
         guestButtonsComponent.getButton2().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
